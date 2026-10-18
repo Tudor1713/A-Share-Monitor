@@ -1,0 +1,46 @@
+{
+  "name": "fupantai-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "复盘台 Windows 桌面版：择时、择股、大势、资讯，支持 GitHub Releases 更新提醒。",
+  "author": "Tudor1713",
+  "license": "MIT",
+  "main": "src/main.cjs",
+  "repository": { "type": "git", "url": "https://github.com/Tudor1713/fupantai-desktop.git" },
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.cjs",
+    "test:coverage": "node --test --experimental-test-coverage --test-coverage-include=src/update-core.cjs --test-coverage-include=src/update-service.cjs --test-coverage-include=src/download.cjs --test-coverage-lines=80 --test-coverage-functions=80 test/*.test.cjs",
+    "build:win": "electron-builder --win nsis --x64 --publish never",
+    "build:dir": "electron-builder --win dir --x64 --publish never",
+    "release:checksums": "node scripts/checksums.cjs",
+    "smoke": "node scripts/smoke.cjs"
+  },
+  "devDependencies": {
+    "electron": "44.9.0",
+    "electron-builder": "26.15.3"
+  },
+  "build": {
+    "appId": "io.github.tudor1713.fupantai",
+    "productName": "复盘台",
+    "copyright": "Copyright © 2026 Tudor1713",
+    "artifactName": "FuPanTai-Setup-${version}-${arch}.${ext}",
+    "asar": true,
+    "directories": { "output": "dist", "buildResources": "assets" },
+    "files": ["src/**/*", "app/**/*", "assets/app.ico", "assets/icon.png", "release-source.json", "package.json", "LICENSE", "NOTICE.md"],
+    "win": { "target": ["nsis"], "icon": "assets/app.ico", "signAndEditExecutable": false },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "allowElevation": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "复盘台",
+      "deleteAppDataOnUninstall": false,
+      "installerLanguages": ["zh_CN", "en_US"],
+      "language": "2052",
+      "runAfterFinish": true
+    }
+  }
+}
