@@ -1,7 +1,7 @@
 const {test}=require('node:test');
 const assert=require('node:assert/strict');
 const {parseVersion,isNewer,parseRepository,parseRelease,parseChecksum,isReleaseUrl}=require('../src/update-core.cjs');
-const repo='Tudor1713/fupantai-desktop';
+const repo='Tudor1713/A-Share-Monitor';
 function release(version='1.2.0') { return {tag_name:'v'+version, name:'复盘台 '+version, body:'修复切换问题', draft:false,prerelease:false,html_url:`https://github.com/${repo}/releases/tag/v${version}`,assets:[{name:`FuPanTai-Setup-${version}-x64.exe`,size:1234,browser_download_url:`https://github.com/${repo}/releases/download/v${version}/FuPanTai-Setup-${version}-x64.exe`},{name:'SHA256SUMS.txt',size:200,browser_download_url:`https://github.com/${repo}/releases/download/v${version}/SHA256SUMS.txt`}]}; }
 test('versions compare numeric components, not lexical text',()=>{assert.deepEqual(parseVersion('v1.10.0'),[1,10,0]);assert.equal(isNewer('1.10.0','1.9.9'),true);assert.equal(isNewer('1.0.0','1.0.0'),false);assert.equal(isNewer('0.9.9','1.0.0'),false);});
 test('only valid stable version tags can become updates',()=>{for(const value of ['1.2','hello','1.0.0-beta.1','01.0.0','999999999999999999.0.0',null])assert.equal(parseVersion(value),null);assert.equal(isNewer('invalid','1.0.0'),false);});

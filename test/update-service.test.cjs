@@ -1,6 +1,6 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');
 const {UpdateService}=require('../src/update-service.cjs');
-const repo='Tudor1713/fupantai-desktop';
+const repo='Tudor1713/A-Share-Monitor';
 const release=()=>({tag_name:'v2.0.0',body:'更新说明',assets:[],html_url:`https://github.com/${repo}/releases/tag/v2.0.0`});
 test('new version produces an application event and a once-per-version notification',async()=>{let calls=0;const settings={};const svc=new UpdateService({currentVersion:'1.0.0',repo,settings,getRelease:async()=>{calls++;return release();},persist:()=>{}});const notes=[];svc.on('notify',x=>notes.push(x));await svc.check({manual:true});assert.equal(svc.snapshot().status,'available');assert.equal(svc.snapshot().latest.version,'2.0.0');await svc.check({manual:true});assert.equal(notes.length,1);assert.equal(calls,2);assert.equal(settings.notifiedVersion,'2.0.0');});
 test('network failure is a readable state, and a later check can recover',async()=>{let fail=true;const svc=new UpdateService({currentVersion:'1.0.0',repo,getRelease:async()=>{if(fail)throw new Error('offline');return null;}});await svc.check({manual:true});assert.equal(svc.snapshot().status,'error');assert.match(svc.snapshot().message,/网络|连接|检查/);fail=false;await svc.check({manual:true});assert.equal(svc.snapshot().status,'current');});

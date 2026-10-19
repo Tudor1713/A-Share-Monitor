@@ -1,6 +1,6 @@
 const {test}=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs/promises');const os=require('node:os');const path=require('node:path');const crypto=require('node:crypto');
 const {readLimited,downloadVerified}=require('../src/download.cjs');
-const repo='Tudor1713/fupantai-desktop',name='FuPanTai-Setup-2.0.0-x64.exe';const url=`https://github.com/${repo}/releases/download/v2.0.0/${name}`;
+const repo='Tudor1713/A-Share-Monitor',name='FuPanTai-Setup-2.0.0-x64.exe';const url=`https://github.com/${repo}/releases/download/v2.0.0/${name}`;
 const payload=Buffer.from('MZ verified installer fixture');const sha=crypto.createHash('sha256').update(payload).digest('hex');
 const release={asset:{name,url,size:payload.length},checksum:{name:'SHA256SUMS.txt',url:`https://github.com/${repo}/releases/download/v2.0.0/SHA256SUMS.txt`},downloadable:true};
 test('download is exposed for install only after SHA-256 verification',async t=>{const dir=await fs.mkdtemp(path.join(os.tmpdir(),'fupantai-test-'));t.after(()=>fs.rm(dir,{recursive:true,force:true}));const fetcher=async u=>new Response(u.endsWith('.txt')?`${sha}  ${name}\n`:payload);const progress=[];const file=await downloadVerified(release,{repo,directory:dir,fetcher,onProgress:n=>progress.push(n)});assert.deepEqual(await fs.readFile(file.path),payload);assert.equal(file.sha256,sha);assert.ok(progress.includes(100));});
