@@ -19,7 +19,7 @@
   "devDependencies": {
     "electron": "44.9.0",
     "electron-builder": "26.15.3",
-    "playwright": "1.62.1"
+    "playwright": "1.65.0"
   },
   "build": {
     "appId": "io.github.tudor1713.fupantai",
